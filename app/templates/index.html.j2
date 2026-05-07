@@ -66,7 +66,7 @@
         </div>
 
         {# Form #}
-        <form class="flex items-center gap-2">
+        <form class="flex items-center gap-2 mb-6">
           <input
             type="text"
             class="bg-zinc-800 px-4 py-3 rounded-xl grow outline-0 border border-zinc-600 focus:border-cyan-500"
@@ -74,11 +74,66 @@
           />
           <button
             type="submit"
-            class="bg-cyan-400 text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-cyan-400/80"
+            class="bg-cyan-400/80 text-white text-lg font-bold px-4 py-3 rounded-xl hover:bg-cyan-400/50"
           >
             Add
           </button>
         </form>
+
+        {# Tasks #}
+        <ul class="space-y-3">
+          <li
+            class="border border-zinc-800 bg-zinc-900/50 rounded-xl p-4 flex items-center"
+          >
+            <button
+              class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400"
+            ></button>
+            <span class="ml-4 grow">Build a todo app</span>
+            <button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-5 text-zinc-600 hover:text-red-400"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </li>
+          <li
+            class="border border-zinc-800/50 bg-zinc-900/30 rounded-xl p-4 flex items-center"
+          >
+            <button
+              class="rounded-full border-2 border-cyan-400 bg-cyan-400 size-5 flex justify-center items-center"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-3"
+              >
+                <path d="M20 6 9 17l-5-5" />
+              </svg>
+            </button>
+            <span class="ml-4 text-zinc-500 line-through"
+              >Add Tailwind styling</span
+            >
+            <button></button>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
