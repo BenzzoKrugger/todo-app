@@ -70,6 +70,7 @@
         hx-post="/todos"
         hx-target="#todo-list"
         hx-swap="afterbegin"
+        hx-on::after-request="this.reset()"
         class="flex items-center gap-2 mb-6">
           <input
             type="text"
