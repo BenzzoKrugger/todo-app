@@ -2,58 +2,67 @@
 
 {% block content %}
   <div class="flex-1 flex justify-center items-center p-8">
-    <div class="rounded-3xl bg-zinc-900 p-6 min-w-md border border-zinc-800">
-      {# Header #}
-      <div class="flex justify-start items-center gap-4">
-        {# Icon #}
-        <div
-          class="size-12 bg-linear-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/25"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="size-6 text-white"
-          >
-            <path
-              d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
-            />
-            <path d="M14 2v5a1 1 0 0 0 1 1h5" />
-          </svg>
-        </div>
-        {# Header Content #}
-        <div>
-          <h1 class="text-xl font-bold">Todo App</h1>
-          <p class="text-zinc-500">Stay productive</p>
-        </div>
-      </div>
+    <div
+      class="relative rounded-3xl bg-zinc-900/80 p-8 w-full max-w-md border border-zinc-800 shadow-2xl backdrop-blur-2xl"
+    >
+      {# Glow #}
+      <div
+        class="absolute -top-20 left-1/2 -translate-x-1/2 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"
+      ></div>
 
-      {# Status cards #}
-      <div class="mt-6 flex justify-between gap-4">
-        {# Total #}
-        <div
-          class="border border-zinc-800 p-4 rounded-xl flex flex-col items-center grow"
-        >
-          <span class="font-bold text-cyan-400 text-2xl"> 4 </span>
-          <p class="text-sm text-zinc-500">Total</p>
+      <div class="relative">
+        {# Header #}
+        <div class="flex justify-start items-center gap-3 mb-6">
+          {# Icon #}
+          <div
+            class="size-12 bg-linear-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/25"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="size-6 text-white"
+            >
+              <path
+                d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+              />
+              <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+            </svg>
+          </div>
+          {# Header Content #}
+          <div>
+            <h1 class="text-xl font-bold">Todo App</h1>
+            <p class="text-zinc-500">Stay productive</p>
+          </div>
         </div>
-        {# Done #}
-        <div
-          class="border border-zinc-800 p-4 rounded-xl flex flex-col items-center grow"
-        >
-          <span class="font-bold text-emerald-400 text-2xl"> 0 </span>
-          <p class="text-sm text-zinc-500">Done</p>
-        </div>
-        {# Progress #}
-        <div
-          class="border border-zinc-800 p-4 rounded-xl flex flex-col items-center grow"
-        >
-          <span class="font-bold text-amber-400 text-2xl"> 0% </span>
-          <p class="text-sm text-zinc-500">Progress</p>
+
+        {# Stats #}
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          {# Total #}
+          <div
+            class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center"
+          >
+            <span class="font-bold text-cyan-400 text-2xl"> 4 </span>
+            <p class="text-sm text-zinc-500">Total</p>
+          </div>
+          {# Done #}
+          <div
+            class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center"
+          >
+            <span class="font-bold text-emerald-400 text-2xl"> 0 </span>
+            <p class="text-sm text-zinc-500">Done</p>
+          </div>
+          {# Progress #}
+          <div
+            class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center"
+          >
+            <span class="font-bold text-amber-400 text-2xl"> 0% </span>
+            <p class="text-sm text-zinc-500">Progress</p>
+          </div>
         </div>
       </div>
     </div>
