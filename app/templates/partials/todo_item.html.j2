@@ -1,15 +1,41 @@
 <li
-  class="border border-zinc-800 bg-zinc-900/50 rounded-xl p-4 flex items-center"
+  class="border border-zinc-800 bg-zinc-900/50 rounded-xl p-4 flex items-center group"
   id="todo-{{ todo.id }}"
 >
   <button
-    class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400"
-  ></button>
-  <span class="ml-4 grow">{{ todo.title }}</span>
+    hx-post="/todos/{{ todo.id }}/toggle"
+    hx-target="#todo-{{ todo.id }}"
+    hx-swap="outerHTML"
+    class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400
+    {% if todo.completed %}
+      border-cyan-400 bg-cyan-400 size-5 flex justify-center items-center
+    {% endif %}
+    "
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="size-3 {% if not todo.completed %}hidden{% endif %}"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  </button>
+  <span
+    class="ml-4 grow {% if todo.completed %}text-zinc-500 line-through{% endif %}"
+    >{{ todo.title }}</span
+  >
   <button
     hx-delete="/todos/{{ todo.id }}"
     hx-target="#todo-{{ todo.id }}"
     hx-swap="outerHTML"
+    class="hidden group-hover:block"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

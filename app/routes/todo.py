@@ -12,25 +12,83 @@ templates = Jinja2Templates("app/templates")
 todos = []
 
 
+def get_stats_data():
+
+    total = len(todos)
+
+    completed = len([t for t in todos if t["completed"]])
+
+    progress = int((completed / total) * 100) if total > 0 else 0
+
+    return {
+        "total": total,
+        "completed": completed,
+        "progress": progress,
+    }
+
+
 # Routes
 @router.get("/", response_class=HTMLResponse)
 def index(request: Request):
-    return templates.TemplateResponse(request=request, name="index.html.j2")
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html.j2",
+        context={
+            **get_stats_data(),
+        },
+    )
 
 
 @router.post("/todos", response_class=HTMLResponse)
 def add_todo(request: Request, title: Annotated[str, Form()]):
 
-    todo = {"id": uuid4(), "title": title, "completed": False}
+    todo = {"id": str(uuid4()), "title": title, "completed": False}
     todos.append(todo)
 
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
     )
 
-@router.delete('/todos/{todo_id}', response_class=HTMLResponse)
+    response.headers["HX-Trigger"] = "todosChanged"
+
+    return response
+
+
+@router.delete("/todos/{todo_id}", response_class=HTMLResponse)
 def delete_todo(todo_id: str):
     global todos
 
-    todos = [todo for todo in todos if todo['id'] != todo_id]
-    return HTMLResponse(content='')
+    todos = [todo for todo in todos if todo["id"] != todo_id]
+    response = HTMLResponse(content="")
+
+    response.headers["HX-Trigger"] = "todosChanged"
+
+    return response
+
+
+@router.post("/todos/{todo_id}/toggle", response_class=HTMLResponse)
+def toggle_todo(request: Request, todo_id: str):
+
+    todo = next(todo for todo in todos if todo["id"] == todo_id)
+
+    todo["completed"] = not todo["completed"]
+
+    response = templates.TemplateResponse(
+        request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
+    )
+
+    response.headers["HX-Trigger"] = "todosChanged"
+
+    return response
+
+
+@router.get("/stats", response_class=HTMLResponse)
+def get_stats(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="partials/stats.html.j2",
+        context={
+            **get_stats_data(),
+        },
+    )

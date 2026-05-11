@@ -1,6 +1,6 @@
 # FastAPI imports
 from fastapi import FastAPI
-from routes.todo import router
+from app.routes.todo import router
 
 
 # Initialize app

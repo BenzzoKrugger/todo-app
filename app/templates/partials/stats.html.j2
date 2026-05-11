@@ -1,0 +1,18 @@
+{# Stats #}
+<div class="grid grid-cols-3 gap-4 mb-6">
+  {# Total #}
+  <div class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center">
+    <span class="font-bold text-cyan-400 text-2xl"> {{ total }} </span>
+    <p class="text-sm text-zinc-500">Total</p>
+  </div>
+  {# Done #}
+  <div class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center">
+    <span class="font-bold text-emerald-400 text-2xl"> {{ completed }} </span>
+    <p class="text-sm text-zinc-500">Done</p>
+  </div>
+  {# Progress #}
+  <div class="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800 text-center">
+    <span class="font-bold text-amber-400 text-2xl"> {{ progress }} % </span>
+    <p class="text-sm text-zinc-500">Progress</p>
+  </div>
+</div>
