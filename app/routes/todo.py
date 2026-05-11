@@ -27,3 +27,10 @@ def add_todo(request: Request, title: Annotated[str, Form()]):
     return templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
     )
+
+@router.delete('/todos/{todo_id}', response_class=HTMLResponse)
+def delete_todo(todo_id: str):
+    global todos
+
+    todos = [todo for todo in todos if todo['id'] != todo_id]
+    return HTMLResponse(content='')

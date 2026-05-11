@@ -1,11 +1,16 @@
 <li
   class="border border-zinc-800 bg-zinc-900/50 rounded-xl p-4 flex items-center"
+  id="todo-{{ todo.id }}"
 >
   <button
     class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400"
   ></button>
   <span class="ml-4 grow">{{ todo.title }}</span>
-  <button>
+  <button
+    hx-delete="/todos/{{ todo.id }}"
+    hx-target="#todo-{{ todo.id }}"
+    hx-swap="outerHTML"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
