@@ -41,7 +41,11 @@
         </div>
 
         {# Stats #}
-        <div id="stats" hx-get="/stats" hx-trigger="load, todosChanged from:body">
+        <div
+          id="stats"
+          hx-get="/stats"
+          hx-trigger="load, todosChanged from:body"
+        >
           {% include "partials/stats.html.j2" %}
         </div>
 
@@ -50,10 +54,7 @@
           hx-post="/todos"
           hx-target="#todo-list"
           hx-swap="afterbegin"
-          hx-on::after-request="this.reset();
-          document.body.dispatchEvent(
-          new Event('todosChanged')
-          );"
+          hx-on::after-request="this.reset();"
           class="flex items-center gap-2 mb-6"
         >
           <input
@@ -70,18 +71,38 @@
           </button>
         </form>
 
-        {# Tasks #}
-        <ul id="todo-list" class="space-y-3">
-          {% for todo in todos %}
-            {% include "partials/todo_item.html.j2" %}
-          {% endfor %}
-        </ul>
+        {# Tasks list #}
+        {% include "partials/todo_list.html.j2" %}
 
         {# Filter buttons #}
         <div class="mt-6 flex gap-3">
-          <button class="px-3 py-2 bg-cyan-400/80 rounded-xl hover:bg-cyan-400/50">All</button>
-          <button class="px-3 py-2 bg-emerald-400/80 rounded-xl hover:bg-emerald-400/50">Completed</button>
-          <button class="px-3 py-2 bg-amber-400/80 rounded-xl hover:bg-amber-400/50">Not Completed</button>
+          <button
+            hx-get="/?filter=all"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-2 bg-cyan-400/80 rounded-xl hover:bg-cyan-400/50"
+          >
+            All
+          </button>
+          <button
+            hx-get="/?filter=completed"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-2 bg-emerald-400/80 rounded-xl hover:bg-emerald-400/50"
+          >
+            Completed
+          </button>
+          <button
+            hx-get="/?filter=active"
+            hx-target="#todo-list"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="px-3 py-2 bg-amber-400/80 rounded-xl hover:bg-amber-400/50"
+          >
+            Not Completed
+          </button>
         </div>
       </div>
     </div>

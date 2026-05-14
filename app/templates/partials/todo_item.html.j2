@@ -1,5 +1,6 @@
 {% set todo_class = 'text-zinc-500 line-through' if todo.completed else '' %}
 {% set check_class = '' if todo.completed else 'hidden' %}
+{% set todo_complete = 'border-cyan-400 bg-cyan-400 size-5 flex justify-center items-center' if todo.completed else '' %}
 
 <li
   class="border border-zinc-800 bg-zinc-900/50 rounded-xl p-4 flex items-center group"
@@ -9,10 +10,7 @@
     hx-post="/todos/{{ todo.id }}/toggle"
     hx-target="#todo-{{ todo.id }}"
     hx-swap="outerHTML"
-    class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400
-    {% if todo.completed %}
-      border-cyan-400 bg-cyan-400 size-5 flex justify-center items-center
-    {% endif %}
+    class="rounded-full border-2 border-zinc-500 size-5 hover:border-cyan-400 {{ todo_complete }}
     "
   >
     <svg

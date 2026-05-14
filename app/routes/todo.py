@@ -29,11 +29,28 @@ def get_stats_data():
 
 # Routes
 @router.get("/", response_class=HTMLResponse)
-def index(request: Request):
+def index(request: Request, filter: str = "all"):
+
+    if filter == "completed":
+        filtered_todos = [todo for todo in todos if todo["completed"]]
+
+    elif filter == "active":
+        filtered_todos = [todo for todo in todos if not todo["completed"]]
+
+    else:
+        filtered_todos = todos
+
+    template = (
+        "partials/todo_list.html.j2"
+        if request.headers.get("hx-request")
+        else "index.html.j2"
+    )
+
     return templates.TemplateResponse(
         request=request,
-        name="index.html.j2",
+        name=template,
         context={
+            "todos": filtered_todos,
             **get_stats_data(),
         },
     )
