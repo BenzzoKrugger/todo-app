@@ -3,10 +3,9 @@ from fastapi import Request, APIRouter, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.database import get_session
 from app.models.todo import Todo
-from sqlmodel import select
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
@@ -14,9 +13,7 @@ templates = Jinja2Templates("app/templates")
 def get_stats_data(todos):
 
     total = len(todos)
-
     completed = len([t for t in todos if t.completed])
-
     progress = int((completed / total) * 100) if total > 0 else 0
 
     return {
@@ -69,9 +66,6 @@ def add_todo(request: Request, title: Annotated[str, Form()], session: Session =
     session.commit()
     session.refresh(todo)
     
-    # todo = {"id": str(uuid4()), "title": title, "completed": False}
-    # todos.append(todo)
-
     response = templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
     )
@@ -82,23 +76,25 @@ def add_todo(request: Request, title: Annotated[str, Form()], session: Session =
 
 
 @router.delete("/todos/{todo_id}", response_class=HTMLResponse)
-def delete_todo(todo_id: str):
-    global todos
+def delete_todo(todo_id: int, session: Session = Depends(get_session)):
+    
+    todo = session.get(Todo, todo_id)
+    session.delete(todo)
+    session.commit()
 
-    todos = [todo for todo in todos if todo["id"] != todo_id]
     response = HTMLResponse(content="")
-
     response.headers["HX-Trigger"] = "todosChanged"
 
     return response
 
 
 @router.post("/todos/{todo_id}/toggle", response_class=HTMLResponse)
-def toggle_todo(request: Request, todo_id: str):
+def toggle_todo(request: Request, todo_id: int, session: Session = Depends(get_session)):
 
-    todo = next(todo for todo in todos if todo["id"] == todo_id)
-
-    todo["completed"] = not todo["completed"]
+    todo = session.get(Todo, todo_id)
+    todo.completed = not todo.completed
+    session.commit()
+    session.refresh(todo)
 
     response = templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
