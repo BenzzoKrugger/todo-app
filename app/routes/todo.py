@@ -1,16 +1,16 @@
 # FastAPI imports
-from fastapi import Request, APIRouter, Form
+from fastapi import Request, APIRouter, Form, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
-from uuid import uuid4
+from sqlmodel import Session
+from app.database import get_session
+from app.models.todo import Todo
 
 router = APIRouter()
-
 templates = Jinja2Templates("app/templates")
 
 todos = []
-
 
 def get_stats_data():
 
@@ -57,10 +57,18 @@ def index(request: Request, filter: str = "all"):
 
 
 @router.post("/todos", response_class=HTMLResponse)
-def add_todo(request: Request, title: Annotated[str, Form()]):
+def add_todo(request: Request, title: Annotated[str, Form()], session: Session = Depends(get_session)):
 
-    todo = {"id": str(uuid4()), "title": title, "completed": False}
-    todos.append(todo)
+    todo = Todo(
+        title= title,
+    )
+
+    session.add(todo)
+    session.commit()
+    session.refresh(todo)
+    
+    # todo = {"id": str(uuid4()), "title": title, "completed": False}
+    # todos.append(todo)
 
     response = templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
