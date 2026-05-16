@@ -6,17 +6,16 @@ from typing import Annotated
 from sqlmodel import Session
 from app.database import get_session
 from app.models.todo import Todo
+from sqlmodel import select
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
 
-todos = []
-
-def get_stats_data():
+def get_stats_data(todos):
 
     total = len(todos)
 
-    completed = len([t for t in todos if t["completed"]])
+    completed = len([t for t in todos if t.completed])
 
     progress = int((completed / total) * 100) if total > 0 else 0
 
@@ -29,13 +28,16 @@ def get_stats_data():
 
 # Routes
 @router.get("/", response_class=HTMLResponse)
-def index(request: Request, filter: str = "all"):
+def index(request: Request, filter: str = "all", session: Session = Depends(get_session)):
+
+    statement = select(Todo)
+    todos = session.exec(statement).all()
 
     if filter == "completed":
-        filtered_todos = [todo for todo in todos if todo["completed"]]
+        filtered_todos = [todo for todo in todos if todo.completed]
 
     elif filter == "active":
-        filtered_todos = [todo for todo in todos if not todo["completed"]]
+        filtered_todos = [todo for todo in todos if not todo.completed]
 
     else:
         filtered_todos = todos
@@ -51,7 +53,7 @@ def index(request: Request, filter: str = "all"):
         name=template,
         context={
             "todos": filtered_todos,
-            **get_stats_data(),
+            **get_stats_data(todos),
         },
     )
 
@@ -108,12 +110,15 @@ def toggle_todo(request: Request, todo_id: str):
 
 
 @router.get("/stats", response_class=HTMLResponse)
-def get_stats(request: Request):
+def get_stats(request: Request, session: Session = Depends(get_session)):
+
+    statement = select(Todo)
+    todos = session.exec(statement).all()
 
     return templates.TemplateResponse(
         request=request,
         name="partials/stats.html.j2",
         context={
-            **get_stats_data(),
+            **get_stats_data(todos),
         },
     )
