@@ -1,5 +1,5 @@
 # FastAPI imports
-from fastapi import Request, APIRouter, Form, Depends
+from fastapi import Request, APIRouter, Form, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Annotated
@@ -9,6 +9,7 @@ from app.models.todo import Todo
 
 router = APIRouter()
 templates = Jinja2Templates("app/templates")
+
 
 def get_stats_data(todos):
 
@@ -25,7 +26,9 @@ def get_stats_data(todos):
 
 # Routes
 @router.get("/", response_class=HTMLResponse)
-def index(request: Request, filter: str = "all", session: Session = Depends(get_session)):
+def index(
+    request: Request, filter: str = "all", session: Session = Depends(get_session)
+):
 
     statement = select(Todo)
     todos = session.exec(statement).all()
@@ -56,16 +59,20 @@ def index(request: Request, filter: str = "all", session: Session = Depends(get_
 
 
 @router.post("/todos", response_class=HTMLResponse)
-def add_todo(request: Request, title: Annotated[str, Form()], session: Session = Depends(get_session)):
+def add_todo(
+    request: Request,
+    title: Annotated[str, Form()],
+    session: Session = Depends(get_session),
+):
 
     todo = Todo(
-        title= title,
+        title=title,
     )
 
     session.add(todo)
     session.commit()
     session.refresh(todo)
-    
+
     response = templates.TemplateResponse(
         request=request, name="/partials/todo_item.html.j2", context={"todo": todo}
     )
@@ -77,8 +84,12 @@ def add_todo(request: Request, title: Annotated[str, Form()], session: Session =
 
 @router.delete("/todos/{todo_id}", response_class=HTMLResponse)
 def delete_todo(todo_id: int, session: Session = Depends(get_session)):
-    
+
     todo = session.get(Todo, todo_id)
+
+    if not todo:
+        raise HTTPException(status_code=404)
+
     session.delete(todo)
     session.commit()
 
@@ -89,9 +100,15 @@ def delete_todo(todo_id: int, session: Session = Depends(get_session)):
 
 
 @router.post("/todos/{todo_id}/toggle", response_class=HTMLResponse)
-def toggle_todo(request: Request, todo_id: int, session: Session = Depends(get_session)):
+def toggle_todo(
+    request: Request, todo_id: int, session: Session = Depends(get_session)
+):
 
     todo = session.get(Todo, todo_id)
+
+    if not todo:
+        raise HTTPException(status_code=404)
+    
     todo.completed = not todo.completed
     session.commit()
     session.refresh(todo)
